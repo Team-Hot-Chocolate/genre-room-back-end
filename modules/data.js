@@ -6,11 +6,9 @@ const Data={};
 
 
 Data.getUserInfo = async(request, response) => {
-  console.log("getuserInfo function");
   const userEmail = request.body.email;
-  // response.status(200).send('response');
   const user = await userModel.find({ email: userEmail });
-  // response.status(200).json(user[user.length - 1]);
+  console.log('get query', user);
   response.status(200).json(user[0]);
 };
 
@@ -24,6 +22,8 @@ Data.updateGenre = async(request, response) => {
     response.status(200).send(genre);
   });
 }
+//need to respond with a movie rec here
+
 
 Data.deleteGenre = async(request, response) => {
   const userEmail = request.body.email;
@@ -35,8 +35,22 @@ Data.deleteGenre = async(request, response) => {
   });
 }
 
-Data.createUser = async(request,response) => {
-  const 
+Data.createUser = async(request, response) => {
+  //email and name must be passed into request.body
+  const userEmail = request.body.email;
+  const exists = await userModel.exists({ email: userEmail });
+  if (exists) {
+    response.status(200).send('user in DB');
+  } else {
+    const user = {
+      email: request.body.email,
+      name: request.body.name,
+      genre: ''
+    };
+    const newUser = new userModel(user);
+    await newUser.save();
+    response.status(200).send(`${newUser.name} has been added to DB`);
+  };
 }
 
 
