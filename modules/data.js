@@ -20,8 +20,24 @@ Data.updateGenre = async(request, response) => {
     if(err) return console.log(err.message);
     entry.genre = genre;
     entry.save();
-    response.status(200).send(genre);
   });
+  const url = 'https://api.themoviedb.org/3/discover/movie';
+  const query = {
+    query: genre,
+    api_key: process.env.MOVIES_API_KEY
+  };
+  superagent
+    .get(url)
+    .query(query)
+    .then(results => {
+      const movies = results.body.results;
+      console.log(results);
+      const randIdx = Math.floor(Math.random() * (movies.length - 1));
+      response.status(200).send(movies[randIdx]);
+    })
+    .catch((err) => {
+      console.error('superagent error', err.url);
+    });
 }
 //need to respond with a movie rec here
 
