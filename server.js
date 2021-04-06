@@ -11,7 +11,7 @@ const Data=require('./modules/data.js');
 
 
 //get request returns all moviees for a genre
-app.get('/movies/:genre', Data.getAllMovies);
+// app.get('/movies/:genre', Data.getAllMovies);
 
 //get request that gets us the user information
 //pass in email in body
