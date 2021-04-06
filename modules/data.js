@@ -1,6 +1,7 @@
 'use strict';
 const { default: axios } = require('axios');
 const userModel = require('../models/User');
+const superagent = require('superagent');
 
 const Data={};
 
@@ -53,5 +54,28 @@ Data.createUser = async(request, response) => {
   };
 }
 
+Data.getAllMovies = async(request, response) => {
+  const genre = request.params.genre;
+  const url = 'https://api.themoviedb.org/3/discover/movie';
+  const query = {
+    query: genre,
+    api_key: process.env.MOVIES_API_KEY
+  };
+  superagent
+    .get(url)
+    .query(query)
+    .then(results => {
+      const movies = results.body.results;
+      console.log(results);
+      const randIdx = Math.floor(Math.random() * (movies.length - 1));
+      response.status(200).send(movies[randIdx]);
+    })
+    .catch((err) => {
+      console.error('superagent error', err.url);
+    });
+}
+
 
 module.exports = Data;
+
+
