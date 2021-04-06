@@ -21,14 +21,9 @@ Data.updateGenre = async(request, response) => {
     entry.genre = genre;
     entry.save();
   });
-  const url = 'https://api.themoviedb.org/3/discover/movie';
-  const query = {
-    query: genre,
-    api_key: process.env.MOVIES_API_KEY
-  };
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}`;
   superagent
     .get(url)
-    .query(query)
     .then(results => {
       const movies = results.body.results;
       console.log(results);
@@ -39,7 +34,6 @@ Data.updateGenre = async(request, response) => {
       console.error('superagent error', err.url);
     });
 }
-//need to respond with a movie rec here
 
 
 Data.deleteGenre = async(request, response) => {
@@ -72,17 +66,11 @@ Data.createUser = async(request, response) => {
 
 Data.getAllMovies = async(request, response) => {
   const genre = request.params.genre;
-  const url = 'https://api.themoviedb.org/3/discover/movie';
-  const query = {
-    query: genre,
-    api_key: process.env.MOVIES_API_KEY
-  };
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}`;
   superagent
     .get(url)
-    .query(query)
     .then(results => {
       const movies = results.body.results;
-      console.log(results);
       const randIdx = Math.floor(Math.random() * (movies.length - 1));
       response.status(200).send(movies[randIdx]);
     })
