@@ -14,6 +14,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 //routes
 app.get('/movies/:genre', Data.getAllMovies);
+app.get('/movies', Data.getMovieNoGenre);
 app.get('/user', Data.getUserInfo);
 app.post('/user', Data.createUser);
 app.put('/user/:genre', Data.updateGenre);
