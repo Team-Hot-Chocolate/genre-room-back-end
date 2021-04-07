@@ -9,29 +9,7 @@ const userSchema = new mongoose.Schema({
 });
 
 const User = mongoose.model('BookParent', userSchema);
-
-
-const jakob = new User({
-  email: 'lumpkinjakobr@gmail.com',
-  name: 'jakob lumpkin',
-  genre: 'comedy'
-});
-// jakob.save();
-
-
-const jessi = new User({
-  email: 'jessivelazq1@gmail.com',
-  name: 'jessi velazquez',
-  genre: 'comedy'
-});
-// jessi.save();
-
-const chris = new User({
-  email: 'gantt.art@gmail.com',
-  name: 'chris gantt',
-  genre: 'comedy'
-});
-// chris.save();
+// 'BookParent' leftover from last lab.
+// It's already set in our MongoDB Atlas to this but in the future this name will be more fitting for the project we're on.
 
 module.exports = User;
-
