@@ -7,17 +7,23 @@ const Data={};
 
 Data.getUserInfo = async(request, response) => {
   const userEmail = request.body.email;
-  const user = await userModel.find({ email: userEmail });
+  const user = await userModel.findOne({ email: userEmail });
   console.log('get query', user);
-  response.status(200).json(user[0]);
+  if (user === null) {
+    response.send('user not in db');
+  } else {
+    response.status(200).json(user);
+  }
 };
 
 Data.updateGenre = async(request, response) => {
+  console.log('testing', request.params.genre)
   const userEmail = request.body.email;
   const genre = request.params.genre;
   const page = Math.floor(Math.random() * 20) + 1;
   userModel.findOne({ email: userEmail },(err, entry) => {
-    if(err) return console.log(err.message);
+    if(err) return console.log(err.message, 'user model find 1 error');
+    console.log('entry', entry);
     entry.genre = genre;
     entry.save();
   });
@@ -26,7 +32,6 @@ Data.updateGenre = async(request, response) => {
     .get(url)
     .then(results => {
       const movies = results.body.results;
-      console.log(results);
       const randIdx = Math.floor(Math.random() * (movies.length - 1));
       response.status(200).send(movies[randIdx]);
     })
@@ -37,11 +42,14 @@ Data.updateGenre = async(request, response) => {
 }
 
 Data.deleteGenre = async(request, response) => {
+  console.log('request', request.data);
   const userEmail = request.body.email;
+  console.log('useremail', userEmail);
   userModel.findOne({ email: userEmail },(err, entry) => {
-    if(err) return console.log(err.message);
+    if(err) return console.log('error for delete genre', err.message);
     entry.genre = '';
     entry.save();
+    console.log('genre selection reset', entry.genre);
     response.status(200).send(`genre selection reset`);
   });
 }
