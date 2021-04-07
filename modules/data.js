@@ -1,10 +1,9 @@
 'use strict';
-const { default: axios } = require('axios');
+
 const userModel = require('../models/User');
 const superagent = require('superagent');
 
 const Data={};
-
 
 Data.getUserInfo = async(request, response) => {
   const userEmail = request.body.email;
@@ -16,7 +15,7 @@ Data.getUserInfo = async(request, response) => {
 Data.updateGenre = async(request, response) => {
   const userEmail = request.body.email;
   const genre = request.params.genre;
-  const page = Math.floor(Math.random() * 20);
+  const page = Math.floor(Math.random() * 20) + 1;
   userModel.findOne({ email: userEmail },(err, entry) => {
     if(err) return console.log(err.message);
     entry.genre = genre;
@@ -32,10 +31,10 @@ Data.updateGenre = async(request, response) => {
       response.status(200).send(movies[randIdx]);
     })
     .catch((err) => {
-      console.error('superagent error', err.url);
+      console.error('tmdb error');
+      response.status(404).send('tmdb error');
     });
 }
-
 
 Data.deleteGenre = async(request, response) => {
   const userEmail = request.body.email;
@@ -67,7 +66,7 @@ Data.createUser = async(request, response) => {
 
 Data.getAllMovies = async(request, response) => {
   const genre = request.params.genre;
-  const page = Math.floor(Math.random() * 20);
+  const page = Math.floor(Math.random() * 20) + 1;
   const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}&page=${page}`;
   superagent
     .get(url)
@@ -77,12 +76,14 @@ Data.getAllMovies = async(request, response) => {
       response.status(200).send(movies[randIdx]);
     })
     .catch((err) => {
-      console.error('superagent error', err.url);
+      console.error('tmdb error');
+      response.status(404).send('tmdb error');
     });
 }
 
 Data.getMovieNoGenre = async(request, response) => {
-  const page = Math.floor(Math.random() * 20);
+  const page = Math.floor(Math.random() * 20) + 1;
+  console.log(page);
   const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&page=${page}`;
   superagent
     .get(url)
@@ -92,10 +93,9 @@ Data.getMovieNoGenre = async(request, response) => {
       response.status(200).send(movies[randIdx]);
     })
     .catch((err) => {
-      console.error('superagent error', err.url);
+      console.error('tmdb error');
+      response.status(404).send('tmdb error');
     });
 }
 
 module.exports = Data;
-
-
