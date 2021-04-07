@@ -1,15 +1,13 @@
 'use strict';
 
 require('dotenv').config();
-const express=require('express');
-const cors=require('cors');
-const app=express();
+const express = require('express');
+const cors = require('cors');
+const app = express();
 app.use(cors());
 app.use(express.json());
-const Data=require('./modules/data.js');
-
-const PORT=process.env.PORT || 3002;
-const MONGODB_URI = process.env.MONGODB_URI;
+const Data = require('./modules/data.js');
+const PORT = process.env.PORT || 3002;
 
 
 //routes
@@ -21,9 +19,9 @@ app.put('/user/:genre', Data.updateGenre);
 app.delete('/user', Data.deleteGenre);
 
 
-
+// DB Connection
+const MONGODB_URI = process.env.MONGODB_URI;
 const mongoose = require('mongoose');
-
 
 mongoose.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
 const db = mongoose.connection;
