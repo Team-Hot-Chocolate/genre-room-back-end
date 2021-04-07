@@ -16,12 +16,13 @@ Data.getUserInfo = async(request, response) => {
 Data.updateGenre = async(request, response) => {
   const userEmail = request.body.email;
   const genre = request.params.genre;
+  const page = Math.floor(Math.random() * 20);
   userModel.findOne({ email: userEmail },(err, entry) => {
     if(err) return console.log(err.message);
     entry.genre = genre;
     entry.save();
   });
-  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}`;
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}&page=${page}`;
   superagent
     .get(url)
     .then(results => {
@@ -66,7 +67,8 @@ Data.createUser = async(request, response) => {
 
 Data.getAllMovies = async(request, response) => {
   const genre = request.params.genre;
-  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}`;
+  const page = Math.floor(Math.random() * 20);
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&with_genres=${genre}&page=${page}`;
   superagent
     .get(url)
     .then(results => {
@@ -79,6 +81,20 @@ Data.getAllMovies = async(request, response) => {
     });
 }
 
+Data.getMovieNoGenre = async(request, response) => {
+  const page = Math.floor(Math.random() * 20);
+  const url = `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.MOVIES_API_KEY}&page=${page}`;
+  superagent
+    .get(url)
+    .then(results => {
+      const movies = results.body.results;
+      const randIdx = Math.floor(Math.random() * (movies.length - 1));
+      response.status(200).send(movies[randIdx]);
+    })
+    .catch((err) => {
+      console.error('superagent error', err.url);
+    });
+}
 
 module.exports = Data;
 
