@@ -6,7 +6,8 @@ const superagent = require('superagent');
 const Data={};
 
 Data.getUserInfo = async(request, response) => {
-  const userEmail = request.body.email;
+  const userEmail = request.query.email;
+  console.log('request object', request);
   const user = await userModel.findOne({ email: userEmail });
   console.log('get query', user);
   if (user === null) {
